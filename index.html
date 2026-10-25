@@ -84,6 +84,8 @@ h2{font:400 clamp(1.7rem,2.9vw,2.7rem)/1.1 var(--hd);color:var(--r);text-transfo
 .fr.on{opacity:1;transform:none}.fr img{width:100%;height:100%;object-fit:cover;display:block}
 .rc{display:flex;justify-content:center;gap:.7rem}
 .rc button{width:2.7rem;height:2.7rem;border-radius:50%;border:2px solid var(--rt);background:#000a;color:#fff;font:1.2rem/1 var(--hd);transition:background .2s}.rc button:hover{background:var(--r)}
+br.mb{display:none}
+@media(max-width:600px){br.mb{display:inline}.bio p:nth-child(2){white-space:nowrap}}
 @media(max-width:860px){.bb{grid-template-columns:minmax(0,1fr);height:auto}.bt{overflow:visible}.bt h2{text-align:center}.bio{font-size:1.5rem;white-space:normal}.bio .ln{display:inline}.roll{height:min(95vw,32rem)}}
 
 /* members */
@@ -221,7 +223,7 @@ nav a{letter-spacing:.05em}.br{letter-spacing:.03em}.ct dd a{letter-spacing:.01e
 
 <section class="page" id="band-bio"><div class="bg"></div><div class="bb"><div class="bt"><h2>Band Bio</h2>
 <div class="bio"><p><span class="ln"><b>S&amp;TRR</b> deliver an immersive live experience</span> <span class="ln">at the intersection of</span> <span class="ln">unfiltered rock, raw funk, and soulful blues.</span></p>
-<p><span class="ln">Driven by powerhouse vocals,</span> <span class="ln">a tight rhythm section, and inventive guitar jams,</span> <span class="ln">we go beyond routine covers.</span> <span class="ln">Pairing timeless classics with modern deep cuts,</span> <span class="ln"><b>S&amp;TRR</b> elevate every track to its peak performance—</span> <span class="ln">delivering a captivating show curated for</span> <span class="ln">true live music fans.</span></p>
+<p><span class="ln">Driven by powerhouse vocals,</span><br class="mb"> <span class="ln">a tight rhythm section, and inventive<br class="mb"> guitar jams,</span> <span class="ln">we go beyond routine<br class="mb"> covers.</span> <span class="ln">Pairing timeless classics with<br class="mb"> modern deep cuts,</span> <span class="ln"><b>S&amp;TRR</b> elevate<br class="mb"> every track to its peak performance—</span><br class="mb"> <span class="ln">delivering a captivating show<br class="mb"> curated for</span> <span class="ln">true live music fans.</span></p>
 <p class="tg"><span>Not a tribute band.</span> <span>Not a party band.</span> <span>Not an average cover band.</span></p></div></div>
 <div class="roll" id="roll"><div class="stg" id="stg"><div class="fr" id="fa"><img alt="Band photo"></div><div class="fr" id="fb"><img alt="Band photo"></div></div>
 <div class="rc"><button id="rpv" aria-label="Previous photo">‹</button><button id="rpz" aria-label="Pause photos">❚❚</button><button id="rnx" aria-label="Next photo">›</button></div></div></div><i class="sx" data-a="photos"></i></section>
@@ -267,7 +269,7 @@ const MEM=[['shannon','Shannon','Perreault','Vocals','When she’s not teaching,
 
 /* ---------- navigation with stage-sweep transition ---------- */
 function fit(){const as=$$('.ct dd a'),els=[...as,...$$('.ct dt')];els.forEach(a=>a.style.fontSize='');if(!as[0]||!as[0].parentElement.clientWidth)return;let z=parseFloat(getComputedStyle(as[0]).fontSize);while(as.some(a=>a.offsetWidth>a.parentElement.clientWidth)&&z>12){z-=1;els.forEach(a=>a.style.fontSize=z+'px')}}
-function fitBio(){const bb=$('.bb'),p=$('.bio'),t=$('.bt');bb.style.height='';p.style.fontSize='';if(innerWidth<860||!bb.offsetWidth)return;bb.style.height=Math.max(260,innerHeight-bb.getBoundingClientRect().top-$('footer').offsetHeight-6)+'px';let lo=11,hi=64;for(let i=0;i<9;i++){const m=(lo+hi)/2;p.style.fontSize=m+'px';if(t.scrollHeight<=t.clientHeight&&p.scrollWidth<=t.clientWidth+1)lo=m;else hi=m}p.style.fontSize=lo+'px'}
+function fitBio(){const bb=$('.bb'),p=$('.bio'),t=$('.bt');bb.style.height='';p.style.fontSize='';if(innerWidth<=600&&bb.offsetWidth){const q=p.children[1];let lo=10,hi=24;for(let i=0;i<8;i++){const m=(lo+hi)/2;p.style.fontSize=m+'px';if(q.scrollWidth<=q.clientWidth+1)lo=m;else hi=m}p.style.fontSize=lo+'px';return}if(innerWidth<860||!bb.offsetWidth)return;bb.style.height=Math.max(260,innerHeight-bb.getBoundingClientRect().top-$('footer').offsetHeight-6)+'px';let lo=11,hi=64;for(let i=0;i<9;i++){const m=(lo+hi)/2;p.style.fontSize=m+'px';if(t.scrollHeight<=t.clientHeight&&p.scrollWidth<=t.clientWidth+1)lo=m;else hi=m}p.style.fontSize=lo+'px'}
 function fitMem(){const g=$('#mem');if(!g.offsetWidth)return;g.style.height='';const multi=getComputedStyle(g).gridTemplateColumns.split(' ').length>2,cards=$$('.m'),caps=cards.map(m=>m.querySelector('figcaption')),two=cards.filter(m=>getComputedStyle(m).gridTemplateColumns.split(' ').length>1);
  if(multi)g.style.height=Math.max(260,innerHeight-g.getBoundingClientRect().top-$('footer').offsetHeight-6)+'px';
  let z=Math.max(11,Math.min(26,cards[0].clientWidth*.044));

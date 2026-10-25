@@ -28,6 +28,16 @@ function parseDate(key, val) {
   return { d: zoned(+y, +mo, +da, +h, +mi, tz ? tz[1] : TZ), allDay: false };
 }
 
+
+// If the location starts with a venue name ("Carmine's Bar, 389 Main St, ..."), keep only the street address onward.
+// A leading piece is dropped only when it has no digits and a later piece starts with a street number.
+function streetOnly(place) {
+  const parts = place.split(',').map((x) => x.trim()).filter(Boolean);
+  const i = parts.findIndex((x) => /^\d/.test(x));
+  if (i > 0 && !parts.slice(0, i).some((x) => /\d/.test(x))) return parts.slice(i).join(', ');
+  return place;
+}
+
 export default async function handler(req, res) {
   const url = process.env.CAL_ICS_URL;
   if (!url) return res.status(200).json({ shows: [] });
@@ -52,6 +62,7 @@ export default async function handler(req, res) {
       if (only && !title.toLowerCase().includes(only)) continue;
       let place = unesc(props.LOCATION?.val || '').replace(/,?\s*USA$/, '');
       if (place.toLowerCase().startsWith(title.toLowerCase())) place = place.slice(title.length).replace(/^[,\s]+/, '');
+      place = streetOnly(place); // Google often puts the venue name first; the title already shows it
       shows.push({ s: st.d.toISOString(), e: en && !st.allDay ? en.d.toISOString() : null, allDay: st.allDay, t: title, p: place });
     }
     shows.sort((a, b) => new Date(a.s) - new Date(b.s));

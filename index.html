@@ -191,6 +191,7 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 @keyframes dl{from{opacity:0;transform:scale(.85)}}
 dialog .x{position:absolute;top:.4rem;right:.4rem;z-index:3;width:2.6rem;height:2.6rem;border-radius:50%;border:0;background:var(--r);font:1.4rem var(--hd)}
 #dgb img{display:block;max-width:100%;max-height:84svh;margin:auto}
+#dgb .lb{position:relative}#dgb .lb button{position:absolute;top:50%;transform:translateY(-50%);width:3rem;height:3rem;border-radius:50%;border:2px solid var(--rt);background:#000b;color:#fff;font:700 1.8rem/1 var(--hd);display:grid;place-items:center;padding:0 0 .15rem}#dgb .lb button:hover,#dgb .lb button:focus-visible{background:var(--r)}#dgb .lbp{left:.6rem}#dgb .lbn{right:.6rem}
 #dgb iframe{display:block;width:min(88vw,56rem);aspect-ratio:16/9;border:0}
 #dgb .yt{display:block;padding:.8rem 1rem;color:var(--rt);font-weight:600}
 #dgb .mp{display:grid;grid-template-columns:minmax(0,20rem) minmax(0,26rem);gap:1.6rem;padding:1.4rem;align-items:center}
@@ -340,7 +341,7 @@ $('#neon').innerHTML=`<span>${sp('Check back often',0)}</span><i aria-hidden="tr
 $('#shows').addEventListener('click',e=>{const b=e.target.closest('.ic');if(b)ics(+b.dataset.i)});
 
 /* ---------- rolling band photos (new picture every 2 seconds, random order each visit) ---------- */
-let RL=[],ri=0,rpz=0,rh=0,fi=0,ci=0;
+let RL=[],ri=0,rpz=0,rh=0,fi=0,ci=0,lbOn=0,li=0;
 const shuf=a=>{for(let i=a.length;i>1;){const j=Math.random()*i--|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 function lay(f,iw,ih,circ){const st=$('#stg'),bw=st.clientWidth,bh=st.clientHeight;if(!bw)return;const ar=iw/ih;let w,h,r;
  if(ar>.9&&ar<1.12){w=h=Math.min(bw,bh)*.94;r=circ?'50%':'9%'}else{const k=Math.min(bw/iw,bh/ih)*.96;w=iw*k;h=ih*k;r='1.1rem'}
@@ -348,9 +349,15 @@ function lay(f,iw,ih,circ){const st=$('#stg'),bw=st.clientWidth,bh=st.clientHeig
 function rshow(im){const a=$('#fa'),b=$('#fb'),n=fi?a:b,o=fi?b:a;fi=1-fi;n.firstChild.src=im.src;n._d=[im.naturalWidth,im.naturalHeight,ci++%2==0];lay(n,...n._d);o.classList.remove('on');n.classList.add('on');new Image().src=RL[(ri+1)%RL.length]}
 function rstep(d){if(!RL.length)return;ri=(ri+d+RL.length)%RL.length;const im=new Image();im.onload=()=>rshow(im);im.src=RL[ri]}
 async function loadRoll(){let u=[];try{const r=await fetch('/api/photos');if(r.ok)u=(await r.json()).urls||[]}catch(e){}RL=shuf(u.length?u:RP.slice());ri=0;rstep(0)}
-loadRoll();setInterval(()=>{if(!rpz&&!rh&&cur=='band-bio'&&!document.hidden)rstep(1)},2000);
+loadRoll();setInterval(()=>{if(!rpz&&!rh&&!lbOn&&cur=='band-bio'&&!document.hidden)rstep(1)},2000);
 $('#rpv').onclick=()=>rstep(-1);$('#rnx').onclick=()=>rstep(1);$('#rpz').onclick=e=>{rpz=1-rpz;e.currentTarget.textContent=rpz?'▶':'❚❚';e.currentTarget.setAttribute('aria-label',rpz?'Play photos':'Pause photos')};
-$('#stg').onmouseenter=()=>rh=1;$('#stg').onmouseleave=()=>rh=0;$('#stg').onclick=()=>RL[ri]&&openDg(`<img src="${RL[ri]}" alt="Band photo">`);
+$('#stg').onmouseenter=()=>rh=1;$('#stg').onmouseleave=()=>rh=0;/* enlarged view: same photos, with previous / next (buttons, arrow keys or a swipe) */
+const lbShow=i=>{li=(i+RL.length)%RL.length;const im=$('#lbi');if(im)im.src=RL[li];new Image().src=RL[(li+1)%RL.length]};
+$('#stg').onclick=()=>{if(!RL[ri])return;lbOn=1;li=ri;openDg(`<div class="lb"><img id="lbi" alt="Band photo"><button class="lbp" aria-label="Previous photo">‹</button><button class="lbn" aria-label="Next photo">›</button></div>`);lbShow(li)};
+dg.addEventListener('close',()=>{lbOn=0});
+db.addEventListener('click',e=>{const b=e.target.closest('.lbp,.lbn');if(b)lbShow(li+(b.classList.contains('lbn')?1:-1))});
+document.addEventListener('keydown',e=>{if(lbOn&&dg.open&&(e.key=='ArrowLeft'||e.key=='ArrowRight')){e.preventDefault();lbShow(li+(e.key=='ArrowRight'?1:-1))}});
+let lx=null;db.addEventListener('touchstart',e=>{lx=lbOn?e.touches[0].clientX:null},{passive:true});db.addEventListener('touchend',e=>{if(lx==null)return;const d=e.changedTouches[0].clientX-lx;lx=null;if(Math.abs(d)>50)lbShow(li+(d<0?1:-1))});
 
 /* ---------- poster at the top of Schedule ---------- */
 async function poster(){let u='';try{const r=await fetch('/api/poster',{cache:'no-store'});if(r.ok)u=(await r.json()).url||''}catch(e){}

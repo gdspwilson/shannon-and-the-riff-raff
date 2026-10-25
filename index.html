@@ -70,6 +70,7 @@ h2{font:400 clamp(1.7rem,2.9vw,2.7rem)/1.1 var(--hd);color:var(--r);text-transfo
 
 /* band bio: text 2/3, rolling photos 1/3 */
 #band-bio .bg{background-image:url(assets/crowd.webp);background-position:center calc(100% + 14vh);background-size:100% auto;opacity:.25}
+@media(max-width:600px),(max-height:500px) and (pointer:coarse){#band-bio .bg{background-image:none}}
 .bb{position:relative;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:4vw;height:calc(100svh - 10rem);max-width:100rem;margin:0 auto}
 .bt{display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden}
 .bt h2{text-align:center;margin-bottom:.9rem}
@@ -104,7 +105,7 @@ h2{font:400 clamp(1.7rem,2.9vw,2.7rem)/1.1 var(--hd);color:var(--r);text-transfo
 /* music */
 #music .bg{background-image:url(assets/music2.jpg);background-position:center;opacity:.15}
 .tag{text-align:center;margin:1rem auto 0;font:400 clamp(.8rem,1.5vw,1.3rem)/1.5 var(--hd);letter-spacing:.06em;text-transform:uppercase;color:#fffe}.tag .ln{display:block;white-space:nowrap}
-@media(max-width:860px){.tag .ln{display:inline;white-space:normal}}
+@media(max-width:860px){.tag .ln{display:block;white-space:normal}}
 .hl{width:calc(30rem*var(--k,1));max-width:100%;margin:1.4rem auto 1.1rem}
 .vids{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(1.2rem*var(--k,1));max-width:calc(56rem*var(--k,1));margin:0 auto}
 @media(max-width:760px){.vids{grid-template-columns:1fr;max-width:26rem}}
@@ -112,13 +113,13 @@ h2{font:400 clamp(1.7rem,2.9vw,2.7rem)/1.1 var(--hd);color:var(--r);text-transfo
 .v img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7;transition:transform .5s,opacity .3s}
 .v::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,#000d)}
 .v b,.v span{position:absolute;left:.9rem;right:.9rem;z-index:2}
-.v b{bottom:1.7rem;font:1.6rem/1.05 var(--hd);letter-spacing:.04em;text-transform:uppercase}
+.v b{bottom:.9rem;font:1.6rem/1.05 var(--hd);letter-spacing:.04em;text-transform:uppercase}
 .v span{bottom:.5rem;font-size:.95rem;color:#ffd0d3}
 .pl{position:absolute;z-index:2;top:50%;left:50%;width:3.6rem;height:3.6rem;margin:-2.2rem 0 0 -1.8rem;border-radius:50%;background:var(--r);transition:transform .25s,background .25s}
 .pl::before{content:"";position:absolute;left:1.3rem;top:.95rem;border:.85rem solid transparent;border-left:1.4rem solid #fff;border-right:0}
 .v:hover{transform:translateY(-.4rem) rotate(-.8deg);box-shadow:0 .8rem 2.4rem #bc1823aa}.v:hover img{transform:scale(1.08);opacity:1}.v:hover .pl{transform:scale(1.25);background:var(--rt)}
-.hl .v b{font-size:calc(1.9rem*var(--k,1));bottom:calc(1.9rem*var(--k,1))}.hl .v span{font-size:max(.7rem,calc(.95rem*var(--k,1)))}
-.vids .v b{font-size:max(.8rem,calc(1.3rem*var(--k,1)));bottom:calc(1.6rem*var(--k,1) + .15rem)}.vids .v span{font-size:max(.62rem,calc(.85rem*var(--k,1)))}.vids .pl{top:36%}
+.hl .v b{font-size:calc(1.9rem*var(--k,1));bottom:calc(1.1rem*var(--k,1))}.hl .v span{font-size:max(.7rem,calc(.95rem*var(--k,1)))}
+.vids .v b{font-size:max(.8rem,calc(1.3rem*var(--k,1)));bottom:calc(.8rem*var(--k,1) + .15rem)}.vids .v span{font-size:max(.62rem,calc(.85rem*var(--k,1)))}.vids .pl{top:36%}
 
 /* schedule */
 .neon{font:400 clamp(2.6rem,6.4vw,4.8rem)/1.1 var(--hd);text-align:center;text-shadow:0 0 .1em #fff,0 0 .3em var(--rt),0 0 .8em var(--rt);animation:fl 5s infinite;text-transform:uppercase;letter-spacing:.04em}
@@ -308,7 +309,7 @@ $('#mem').addEventListener('click',e=>{const b=e.target.closest('.ph');if(!b)ret
 const VD=VIDEOS.map(v=>({...v,s:0,th:'hqdefault'}));
 let VID=VD.map(v=>({...v}));
 const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const tile=(v,i)=>`<button class="v" data-i="${i}" aria-label="Play ${esc(v.t)}"><img src="https://i.ytimg.com/vi/${v.id}/${v.th}.jpg" alt="" loading="lazy" onerror="if(this.dataset.f)this.remove();else{this.dataset.f=1;this.src='https://i.ytimg.com/vi/${v.id}/hqdefault.jpg'}"><i class="pl"></i><b>${esc(v.t)}</b><span>${esc(v.sub)}</span><em class="sx"></em></button>`;
+const tile=(v,i)=>`<button class="v" data-i="${i}" aria-label="Play ${esc(v.t)}"><img src="https://i.ytimg.com/vi/${v.id}/${v.th}.jpg" alt="" loading="lazy" onerror="if(this.dataset.f)this.remove();else{this.dataset.f=1;this.src='https://i.ytimg.com/vi/${v.id}/hqdefault.jpg'}"><i class="pl"></i><b>${esc(v.t)}</b><em class="sx"></em></button>`;
 const drawVids=()=>{$('#hl').innerHTML=tile(VID[0],0);$('#vids').innerHTML=VID.slice(1).map((v,i)=>tile(v,i+1)).join('')};
 const setSlots=l=>(l||[]).forEach((x,k)=>{if(x&&x.id)VID[k]={t:x.title||VD[k].t,id:x.id,s:0,th:'hqdefault',sub:''}});
 drawVids();fetch('/api/videos').then(r=>r.json()).then(j=>{setSlots(j.slots);drawVids()}).catch(()=>{});
@@ -325,7 +326,10 @@ async function loadShows(){
  const t0=new Date().setHours(0,0,0,0);
  return SHOWS.map(a=>{const[y,m,d]=a[0].split('-'),[t1,t2]=a[3].split('–'),h1=hmv(t1),h2=hmv(t2),s=new Date(y,m-1,d,h1?h1[0]:20,h1?h1[1]:0);let e=null;if(h2){e=new Date(y,m-1,d,h2[0],h2[1]);if(e<=s)e.setDate(e.getDate()+1)}return mk(s,e,a[1],a[2],a[3],a[0],'')}).filter(x=>x.s>=t0).sort((a,b)=>a.s-b.s).slice(0,5)}
 let SH=[];const u=d=>d.toISOString().replace(/[-:]|\.\d{3}/g,'');
-function ics(i){const x=SH[i],e=x.e||new Date(x.s.getTime()+108e5),t=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Shannon and The Riff Raff//EN','BEGIN:VEVENT','UID:'+u(x.s)+'@riffraff','DTSTAMP:'+u(new Date()),'DTSTART:'+u(x.s),'DTEND:'+u(e),'SUMMARY:Shannon & The Riff Raff at '+x.t,'LOCATION:'+(x.p||'').replace(/,/g,'\\,'),'END:VEVENT','END:VCALENDAR'].join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/calendar'}));a.download='riff-raff-show.ics';a.click()}
+function ics(i){const x=SH[i],e=x.e||new Date(x.s.getTime()+108e5),ttl='Shannon & The Riff Raff at '+x.t,ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1),and=/Android/.test(ua);
+ if(ios){location.href='/api/ics?'+new URLSearchParams({s:x.s.toISOString(),e:e.toISOString(),t:ttl,p:x.p||''});return}
+ if(and){open('https://calendar.google.com/calendar/render?'+new URLSearchParams({action:'TEMPLATE',text:ttl,dates:u(x.s)+'/'+u(e),location:x.p||''}),'_blank','noopener');return}
+ const t=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Shannon and The Riff Raff//EN','BEGIN:VEVENT','UID:'+u(x.s)+'@riffraff','DTSTAMP:'+u(new Date()),'DTSTART:'+u(x.s),'DTEND:'+u(e),'SUMMARY:'+ttl.replace(/[,;\\]/g,'\\$&'),'LOCATION:'+(x.p||'').replace(/[,;\\]/g,'\\$&'),'END:VEVENT','END:VCALENDAR'].join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/calendar'}));a.download='riff-raff-show.ics';a.click()}
 loadShows().then(L=>{SH=L;
  $('#shows').innerHTML=L.map((x,i)=>`<li${i?'':' class="nx"'}><time datetime="${x.ymd}"><small>${x.wk}</small>${x.ds}</time><div><strong>${esc(x.t)}</strong><div class="mt"><span>${esc(x.p)}${x.p&&x.time?'&nbsp;'.repeat(5):''}${x.time}</span><span class="lk"><a class="ico" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.t+' '+x.p)}" target="_blank" rel="noopener" aria-label="Directions to ${esc(x.t)}" data-tip="Directions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6" fill="currentColor"/></svg></a><button class="ic ico" data-i="${i}" aria-label="Add ${x.t} to your calendar" data-tip="Add to calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M8 14h3v3H8z" fill="currentColor"/></svg></button></span></div></div></li>`).join('');
  if(L[0]){const n=$('#nxt'),x=L[0],d=Math.round((Date.parse(x.ymd)-Date.parse(new Date().toLocaleDateString('en-CA',{timeZone:TZ})))/864e5);n.hidden=false;n.innerHTML=`<small>Next Show ${d<=0?'Tonight':d==1?'Tomorrow':'in '+d+' Days'}</small><b>${x.wk}, ${x.dl}</b><span>${esc(x.t)}${x.p?', '+esc(x.p):''}</span>${x.time?`<span>${x.time}</span>`:''}`}});
